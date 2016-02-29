@@ -46,7 +46,14 @@ var Tones = {
   "A4":	880.00,
    "A#4": 932.33,
   "B4":	987.77,
-  "C5":	1046.50
+  "C5":	1046.50,
+  "C#6": 	1108.73,
+  "D6":	1174.66,
+  "D#6": 	1244.51,
+  "E6":	1318.51,
+  "F6":	1396.91,
+  "F#6": 	1479.98,
+  "G6":	1567.98
 };
 
 var Mapping = {
@@ -81,11 +88,23 @@ var createKeys = function() {
     function(tone) {
       key = document.createElement("div");
       key.id = tone;
-      key.style.height = "100px";
-      key.style.width = "20px";
-      key.style.background = "black";
-      key.style.border = "1px solid white";
+      key.className = "key";
+      key.style.height = "200px";
+      key.style.width = "40px";
+      key.style.border = "1px solid green";
       key.style.display = "inline-block";
+      if (tone[1] === "#") {
+        key.className += " black";
+        key.style.background = "black";
+        key.style.position = "absolute";
+        key.style.top = "0";
+        key.style.width = "24px";
+        key.style.height = "100px";
+        key.style.marginLeft = "-12px";
+      } else {
+        key.className += " white";
+        key.style.background = "white";
+      }
       key.addEventListener(
         'mousedown',
         function() {
@@ -125,10 +144,12 @@ var noteStops = {};
 var playing = false;
 
 var playKey = function(tone) {
-  var freq = Tones[tone];
-  var note = new Note(freq);
-  note.start();
-  noteStops[tone] = note;
+  if (!noteStops[tone]) {
+    var freq = Tones[tone];
+    var note = new Note(freq);
+    note.start();
+    noteStops[tone] = note;
+  }
 };
 
 var stopKey = function(tone) {
@@ -136,9 +157,27 @@ var stopKey = function(tone) {
   noteStops[tone] = null;
 };
 
+keyDownHandler = function(e) {
+  var tone = Mapping[Number(e.keyCode)];
+  playKey(tone);
+};
+
+keyUpHandler = function(e) {
+  var tone = Mapping[Number(e.keyCode)];
+  stopKey(tone);
+};
+
 
 var main = function() {
   createKeys();
+  document.addEventListener(
+    'keydown',
+    keyDownHandler
+  );
+  document.addEventListener(
+    'keyup',
+    keyUpHandler
+  )
 };
 
 main();
