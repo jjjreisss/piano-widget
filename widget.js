@@ -86,11 +86,17 @@ var createKeys = function() {
       key.style.background = "black";
       key.style.border = "1px solid white";
       key.style.display = "inline-block";
-      key.click(playKey.bind(this, tone));
+      key.addEventListener('click', playKey.bind(this, tone));
       document.getElementById("piano-widget").appendChild(key);
-    }.bind(this);
+    }.bind(this)
   )
 };
+
+var playKey = function(tone) {
+  var freq = Tones[tone];
+  var note = new Note(freq);
+  note.start();
+}
 
 
 var main = function() {
