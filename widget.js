@@ -86,17 +86,55 @@ var createKeys = function() {
       key.style.background = "black";
       key.style.border = "1px solid white";
       key.style.display = "inline-block";
-      key.addEventListener('click', playKey.bind(this, tone));
+      key.addEventListener(
+        'mousedown',
+        function() {
+          playing = true;
+          playKey(tone);
+        }
+      );
+      key.addEventListener(
+        'mouseup',
+        function() {
+          playing = false;
+          stopKey(tone);
+        }
+      );
+      key.addEventListener(
+        'mouseleave',
+        function() {
+          if (playing) {
+            stopKey(tone);
+          }
+        }
+      );
+      key.addEventListener(
+        'mouseenter',
+        function() {
+          if (playing) {
+            playKey(tone);
+          }
+        }
+      );
       document.getElementById("piano-widget").appendChild(key);
     }.bind(this)
   )
 };
 
+var noteStops = {};
+var playing = false;
+
 var playKey = function(tone) {
   var freq = Tones[tone];
   var note = new Note(freq);
   note.start();
-}
+  noteStops[tone] = note;
+};
+
+var stopKey = function(tone) {
+  noteStops[tone].stop();
+  noteStops[tone] = null;
+};
 
 
 var main = function() {
