@@ -34,6 +34,8 @@ Note.prototype = {
 };
 
 var Tones = {
+  "A#3": 466.16,
+  "B3": 493.88,
   "C4":	523.25,
    "C#4": 554.37,
   "D4":	587.33,
@@ -47,16 +49,18 @@ var Tones = {
    "A#4": 932.33,
   "B4":	987.77,
   "C5":	1046.50,
-  "C#6": 	1108.73,
-  "D6":	1174.66,
-  "D#6": 	1244.51,
-  "E6":	1318.51,
-  "F6":	1396.91,
-  "F#6": 	1479.98,
-  "G6":	1567.98
+  "C#5": 	1108.73,
+  "D5":	1174.66,
+  "D#5": 	1244.51,
+  "E5":	1318.51,
+  "F5":	1396.91,
+  "F#5": 	1479.98,
+  "G5":	1567.98
 };
 
 var Mapping = {
+  16: "A#3",
+  20: "B3",
   65: "C4",
   87: "C#4",
   83: "D4",
@@ -69,7 +73,14 @@ var Mapping = {
   72: "A4",
   85: "A#4",
   74: "B4",
-  75: "C5"
+  75: "C5",
+  79: "C#5",
+  76: "D5",
+  80: "D#5",
+  186: "E5",
+  222: "F5",
+  221: "F#5",
+  13: "G5",
 };
 
 // $(document).on('keyup', function(e) {
@@ -159,11 +170,17 @@ var stopKey = function(tone) {
 
 keyDownHandler = function(e) {
   var tone = Mapping[Number(e.keyCode)];
+  var key = document.getElementById(tone);
+  // key.className += " playing";
+  key.style.boxShadow = "-1px 2px 0px 2px";
   playKey(tone);
 };
 
 keyUpHandler = function(e) {
   var tone = Mapping[Number(e.keyCode)];
+  var key = document.getElementById(tone);
+  key.style.boxShadow = "0px 0px 0px 0px";
+  // key.className = key.className.slice(0,key.className.length-1-7)
   stopKey(tone);
 };
 
