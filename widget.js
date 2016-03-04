@@ -91,7 +91,7 @@ var Mapping = {
 //   KeyActions.keyPressed(Mapping[e.keyCode]);
 // });
 
-var createKeys = function() {
+var createKeys = function(width, height) {
   var toneStrings = Object.keys(Tones);
   var key;
 
@@ -100,8 +100,8 @@ var createKeys = function() {
       key = document.createElement("div");
       key.id = tone;
       key.className = "key";
-      key.style.height = "200px";
-      key.style.width = "40px";
+      key.style.width = width + "px";
+      key.style.height = height + "px";
       key.style.border = "1px solid green";
       key.style.display = "inline-block";
       if (tone[1] === "#") {
@@ -109,9 +109,9 @@ var createKeys = function() {
         key.style.background = "black";
         key.style.position = "absolute";
         key.style.top = "0";
-        key.style.width = "24px";
-        key.style.height = "100px";
-        key.style.marginLeft = "-12px";
+        key.style.width = width / 2 + "px";
+        key.style.height = height / 2 + "px";
+        key.style.marginLeft = "-" + width / 4 + "px";
       } else {
         key.className += " white";
         key.style.background = "white";
@@ -186,7 +186,10 @@ keyUpHandler = function(e) {
 
 
 var main = function() {
-  createKeys();
+  var pianoWidgetElement = document.getElementById("piano-widget");
+  var widgetWidth = pianoWidgetElement.getAttribute("width") || 600;
+  var widgetHeight = pianoWidgetElement.getAttribute("height") || 300;
+  createKeys(widgetWidth/13, widgetHeight);
   document.addEventListener(
     'keydown',
     keyDownHandler
