@@ -289,9 +289,11 @@ var setupWave = function(width, height, styleString, picString, type) {
 };
 
 var changeWave = function(type) {
-  document.getElementById(wave).style.outline = "0px";
-  wave = type;
-  document.getElementById(wave).style.outline = "1px solid yellow";
+  if (powerOn) {
+    document.getElementById(wave).style.outline = "0px";
+    wave = type;
+    document.getElementById(wave).style.outline = "1px solid yellow";
+  }
 }
 
 var powerButtonColor = function() {
@@ -316,6 +318,7 @@ var turnSynthOn = function() {
   powerButtonElement.style.cssText += (
     "background: green;"
   )
+  changeWave("sine");
 };
 
 var turnSynthOff = function() {
@@ -324,6 +327,7 @@ var turnSynthOff = function() {
   powerButtonElement.style.cssText += (
     "background: red;"
   )
+  document.getElementById(wave).style.outline = "0px";
 };
 
 
@@ -340,7 +344,7 @@ var main = function() {
   setupPowerButtonElement(widgetWidth, widgetHeight);
 
   setupWaveButtons(widgetWidth, widgetHeight);
-  changeWave("sine");
+  turnSynthOn();
 
   document.addEventListener(
     'keydown',
