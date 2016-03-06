@@ -100,22 +100,30 @@ var createKeys = function(width, height) {
       key = document.createElement("div");
       key.id = tone;
       key.className = "key";
-      key.style.width = width + "px";
-      key.style.height = height + "px";
-      key.style.border = "1px solid green";
-      key.style.display = "inline-block";
+      var keyStyleString;
       if (tone[1] === "#") {
-        key.className += " black";
-        key.style.background = "black";
-        key.style.position = "absolute";
-        key.style.top = "0";
-        key.style.width = width / 2 + "px";
-        key.style.height = height / 2 + "px";
-        key.style.marginLeft = "-" + width / 4 + "px";
+        keyStyleString = (
+          "width: " + width + "px;" +
+          "height: " + height + "px;" +
+          "border: 1px solid green;" +
+          "display: inline-block;" +
+          "background: black;" +
+          "position: absolute;" +
+          "top: 0;" +
+          "width: " + width / 2 + "px;" +
+          "height: " + height / 2 + "px;" +
+          "margin-left: " + "-" + width / 4 + "px;"
+        )
       } else {
-        key.className += " white";
-        key.style.background = "white";
+        keyStyleString = (
+          "width: " + width + "px;" +
+          "height: " + height + "px;" +
+          "border: 1px solid green;" +
+          "display: inline-block;" +
+          "background: white;"
+        )
       }
+      key.style.cssText = keyStyleString;
       key.addEventListener(
         'mousedown',
         function() {
@@ -146,7 +154,7 @@ var createKeys = function(width, height) {
           }
         }
       );
-      document.getElementById("piano-widget").appendChild(key);
+      document.getElementById("keyboard").appendChild(key);
     }.bind(this)
   )
 };
@@ -172,14 +180,14 @@ keyDownHandler = function(e) {
   var tone = Mapping[Number(e.keyCode)];
   var key = document.getElementById(tone);
   // key.className += " playing";
-  key.style.boxShadow = "-1px 2px 0px 2px";
+  key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
   playKey(tone);
 };
 
 keyUpHandler = function(e) {
   var tone = Mapping[Number(e.keyCode)];
   var key = document.getElementById(tone);
-  key.style.boxShadow = "0px 0px 0px 0px";
+  key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
   // key.className = key.className.slice(0,key.className.length-1-7)
   stopKey(tone);
 };
@@ -187,9 +195,17 @@ keyUpHandler = function(e) {
 
 var main = function() {
   var pianoWidgetElement = document.getElementById("piano-widget");
+  pianoWidgetElement.style.backgroundColor = "brown";
+  pianoWidgetElement.style.width = pianoWidgetElement.getAttribute("width")+"px";
+  pianoWidgetElement.style.height = pianoWidgetElement.getAttribute("height")+"px";
+  pianoWidgetElement.style.textAlign = "center";
+  keyboardElement = document.createElement("div");
+  keyboardElement.id = "keyboard";
+  keyboardElement.display = "inline-block";
+  pianoWidgetElement.appendChild(keyboardElement);
   var widgetWidth = pianoWidgetElement.getAttribute("width") || 600;
   var widgetHeight = pianoWidgetElement.getAttribute("height") || 300;
-  createKeys(widgetWidth/13, widgetHeight);
+  createKeys(widgetWidth/15, widgetHeight*13/15);
   document.addEventListener(
     'keydown',
     keyDownHandler
