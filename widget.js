@@ -2,16 +2,14 @@ var ctx = new (window.AudioContext || window.webkitAudioContext)();
 
 var createOscillator = function (freq) {
   var osc = ctx.createOscillator();
-  osc.type = "square";
+  osc.type = "triangle";
   osc.frequency.value = freq;
-  osc.detune.value = 0;
   osc.start(ctx.currentTime);
   return osc;
 };
 
 var createGainNode = function () {
   var gainNode = ctx.createGain();
-  gainNode.gain.value = 0;
   gainNode.connect(ctx.destination);
   return gainNode;
 };
@@ -24,7 +22,6 @@ var Note = function (freq) {
 
 Note.prototype = {
   start: function () {
-    // can't explain 0.3, it is a reasonable value
     this.gainNode.gain.value = 0.3;
   },
 
@@ -199,12 +196,12 @@ keyUpHandler = function(e, tone) {
   }
 };
 
-var setupKeyboardElement = function() {
+var setupKeyboardElement = function(widgetWidth, widgetHeight) {
   keyboardElement = document.createElement("div");
   keyboardElement.id = "keyboard";
   keyboardStyleString = (
     "display: inline-block;" +
-    "margin-top: 10px;" +
+    "margin-top: " +  widgetHeight / 30 + "px;" +
     "overflow: hidden;" +
     "position: relative;"
   )
@@ -229,11 +226,11 @@ var setupPowerButtonElement = function(widgetWidth, widgetHeight) {
   var powerButtonElement = document.createElement("div");
   powerButtonStyleString = (
     "width: " + widgetWidth / 20 + "px;" +
-    "height: " + widgetHeight / 20 + "px;" +
+    "height: " + widgetHeight / 15 + "px;" +
     "background: " + powerButtonColor() + ";" +
     "position: absolute;" +
-    "bottom: " + widgetWidth / 40 + "px;" +
-    "right: " + widgetHeight / 40 + "px;" +
+    "right: " + widgetWidth / 40 + "px;" +
+    "bottom: " + widgetHeight / 150 + "px;" +
     "box-shadow: 0px 0px 1px 1px;"
   )
   powerButtonElement.style.cssText = powerButtonStyleString;
@@ -244,6 +241,41 @@ var setupPowerButtonElement = function(widgetWidth, widgetHeight) {
     'click',
     flipPowerSwitch
   );
+};
+
+var setupWaveButtons = function(widgetWidth, widgetHeight) {
+  var buttonPanelElement = document.createElement("div");
+  var buttonPanelStyleString = (
+    "position: absolute;" +
+    "height: " + widgetHeight / 15 + "px;" +
+    "left: "+  widgetWidth / 80 + "px;" +
+    "bottom: " + widgetHeight / 100 + "px;" +
+    "text-align: center;"
+  );
+  var buttonWidth = widgetWidth / 15;
+  var buttonHeight = widgetHeight / 15;
+
+  var buttonStyleString = (
+    "width: " + buttonWidth + "px;" +
+    "height: " + buttonHeight + "px;" +
+    "margin-left: " + widgetWidth / 40 + "px;" +
+    "margin-right: " + widgetWidth / 40 + "px;"
+  )
+  buttonPanelElement.style.cssText = buttonPanelStyleString;
+  buttonPanelElement.id = "button-panel";
+  document.getElementById("synth-widget").appendChild(buttonPanelElement);
+
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sine_oleix7");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "square_i8z8xq");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sawtooth_zzoxij");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "triangle_s1ersy");
+};
+
+var setupWave = function(width, height, styleString, picString) {
+  var waveElement = document.createElement("img");
+  waveElement.style.cssText = styleString;
+  waveElement.src = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_" + width + ",h_" + height + "/" + picString + ".png";
+  document.getElementById("button-panel").appendChild(waveElement)
 };
 
 var powerButtonColor = function() {
@@ -283,13 +315,15 @@ var main = function() {
   var synthWidgetElement = document.getElementById("synth-widget");
 
   setupSynthWidgetElement();
-  setupKeyboardElement();
 
   var widgetWidth = synthWidgetElement.getAttribute("width") || 600;
   var widgetHeight = synthWidgetElement.getAttribute("height") || 300;
 
+  setupKeyboardElement(widgetWidth, widgetHeight);
   createKeys(widgetWidth, widgetHeight);
   setupPowerButtonElement(widgetWidth, widgetHeight);
+
+  setupWaveButtons(widgetWidth, widgetHeight);
 
   document.addEventListener(
     'keydown',
