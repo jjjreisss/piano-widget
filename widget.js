@@ -1,8 +1,13 @@
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
+var noteStops = {};
+var playing = false;
+var powerOn = true;
+var wave = "sine";
+
 
 var createOscillator = function (freq) {
   var osc = ctx.createOscillator();
-  osc.type = "triangle";
+  osc.type = wave;
   osc.frequency.value = freq;
   osc.start(ctx.currentTime);
   return osc;
@@ -158,10 +163,6 @@ var createKeys = function(widgetWidth, widgetHeight) {
   )
 };
 
-var noteStops = {};
-var playing = false;
-var powerOn = true;
-
 var playKey = function(tone) {
   if (!noteStops[tone] && powerOn) {
     var key = document.getElementById(tone);
@@ -265,18 +266,33 @@ var setupWaveButtons = function(widgetWidth, widgetHeight) {
   buttonPanelElement.id = "button-panel";
   document.getElementById("synth-widget").appendChild(buttonPanelElement);
 
-  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sine_oleix7");
-  setupWave(buttonWidth, buttonHeight, buttonStyleString, "square_i8z8xq");
-  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sawtooth_zzoxij");
-  setupWave(buttonWidth, buttonHeight, buttonStyleString, "triangle_s1ersy");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sine_oleix7", "sine");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "square_i8z8xq", "square");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "sawtooth_zzoxij", "sawtooth");
+  setupWave(buttonWidth, buttonHeight, buttonStyleString, "triangle_s1ersy", "triangle");
 };
 
-var setupWave = function(width, height, styleString, picString) {
+var setupWave = function(width, height, styleString, picString, type) {
   var waveElement = document.createElement("img");
   waveElement.style.cssText = styleString;
   waveElement.src = "http://res.cloudinary.com/ddhru3qpb/image/upload/w_" + width + ",h_" + height + "/" + picString + ".png";
+  waveElement.id = type;
+
+  waveElement.addEventListener(
+    "click",
+    function(e) {
+      changeWave(type);
+    }
+  )
+
   document.getElementById("button-panel").appendChild(waveElement)
 };
+
+var changeWave = function(type) {
+  document.getElementById(wave).style.outline = "0px";
+  wave = type;
+  document.getElementById(wave).style.outline = "1px solid yellow";
+}
 
 var powerButtonColor = function() {
   if (powerOn) {
@@ -324,6 +340,7 @@ var main = function() {
   setupPowerButtonElement(widgetWidth, widgetHeight);
 
   setupWaveButtons(widgetWidth, widgetHeight);
+  changeWave("sine");
 
   document.addEventListener(
     'keydown',
