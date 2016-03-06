@@ -209,20 +209,20 @@ var setupKeyboardElement = function() {
     "position: relative;"
   )
   keyboardElement.style.cssText = keyboardStyleString;
-  document.getElementById("piano-widget").appendChild(keyboardElement);
+  document.getElementById("synth-widget").appendChild(keyboardElement);
 };
 
-var setupPianoWidgetElement = function() {
-  var pianoWidgetElement = document.getElementById("piano-widget");
-  pianoWidgetStyleString = (
+var setupSynthWidgetElement = function() {
+  var synthWidgetElement = document.getElementById("synth-widget");
+  synthWidgetStyleString = (
     "background-color: brown;" +
-    "width: " + pianoWidgetElement.getAttribute("width") + "px;" +
-    "height: " + pianoWidgetElement.getAttribute("height") + "px;" +
+    "width: " + synthWidgetElement.getAttribute("width") + "px;" +
+    "height: " + synthWidgetElement.getAttribute("height") + "px;" +
     "text-align: center;" +
     "position: relative;" +
     "overflow: hidden;"
   );
-  pianoWidgetElement.style.cssText = pianoWidgetStyleString;
+  synthWidgetElement.style.cssText = synthWidgetStyleString;
 }
 
 var setupPowerButtonElement = function(widgetWidth, widgetHeight) {
@@ -238,7 +238,7 @@ var setupPowerButtonElement = function(widgetWidth, widgetHeight) {
   )
   powerButtonElement.style.cssText = powerButtonStyleString;
   powerButtonElement.id = "power-button";
-  document.getElementById("piano-widget").appendChild(powerButtonElement);
+  document.getElementById("synth-widget").appendChild(powerButtonElement);
 
   powerButtonElement.addEventListener(
     'click',
@@ -256,13 +256,13 @@ var powerButtonColor = function() {
 
 var flipPowerSwitch = function() {
   if (powerOn) {
-    turnPianoOff();
+    turnSynthOff();
   } else {
-    turnPianoOn();
+    turnSynthOn();
   }
 };
 
-var turnPianoOn = function() {
+var turnSynthOn = function() {
   powerOn = true;
   powerButtonElement = document.getElementById("power-button");
   powerButtonElement.style.cssText += (
@@ -270,7 +270,7 @@ var turnPianoOn = function() {
   )
 };
 
-var turnPianoOff = function() {
+var turnSynthOff = function() {
   powerOn = false;
   powerButtonElement = document.getElementById("power-button");
   powerButtonElement.style.cssText += (
@@ -280,13 +280,13 @@ var turnPianoOff = function() {
 
 
 var main = function() {
-  var pianoWidgetElement = document.getElementById("piano-widget");
+  var synthWidgetElement = document.getElementById("synth-widget");
 
-  setupPianoWidgetElement();
+  setupSynthWidgetElement();
   setupKeyboardElement();
 
-  var widgetWidth = pianoWidgetElement.getAttribute("width") || 600;
-  var widgetHeight = pianoWidgetElement.getAttribute("height") || 300;
+  var widgetWidth = synthWidgetElement.getAttribute("width") || 600;
+  var widgetHeight = synthWidgetElement.getAttribute("height") || 300;
 
   createKeys(widgetWidth, widgetHeight);
   setupPowerButtonElement(widgetWidth, widgetHeight);
