@@ -91,9 +91,11 @@ var Mapping = {
 //   KeyActions.keyPressed(Mapping[e.keyCode]);
 // });
 
-var createKeys = function(width, height) {
+var createKeys = function(widgetWidth, widgetHeight) {
   var toneStrings = Object.keys(Tones);
   var key;
+  var width = widgetWidth / 15;
+  var height = widgetHeight * 13 / 15;
 
   toneStrings.forEach(
     function(tone) {
@@ -113,7 +115,7 @@ var createKeys = function(width, height) {
           "width: " + width / 2 + "px;" +
           "height: " + height / 2 + "px;" +
           "margin-left: " + "-" + width / 4 + "px;"
-        )
+        );
       } else {
         keyStyleString = (
           "width: " + width + "px;" +
@@ -121,7 +123,7 @@ var createKeys = function(width, height) {
           "border: 1px solid green;" +
           "display: inline-block;" +
           "background: white;"
-        )
+        );
       }
       key.style.cssText = keyStyleString;
       key.addEventListener(
@@ -161,51 +163,134 @@ var createKeys = function(width, height) {
 
 var noteStops = {};
 var playing = false;
+var powerOn = true;
 
 var playKey = function(tone) {
-  if (!noteStops[tone]) {
+  if (!noteStops[tone] && powerOn) {
+    var key = document.getElementById(tone);
     var freq = Tones[tone];
     var note = new Note(freq);
+    key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
     note.start();
     noteStops[tone] = note;
   }
 };
 
 var stopKey = function(tone) {
-  noteStops[tone].stop();
-  noteStops[tone] = null;
+  var key = document.getElementById(tone);
+  key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
+  if (noteStops[tone]) {
+    noteStops[tone].stop();
+    noteStops[tone] = null;
+  }
 };
 
 keyDownHandler = function(e) {
   var tone = Mapping[Number(e.keyCode)];
-  var key = document.getElementById(tone);
-  // key.className += " playing";
-  key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
-  playKey(tone);
+  if (Tones[tone]) {
+    playKey(tone);
+  }
 };
 
-keyUpHandler = function(e) {
+keyUpHandler = function(e, tone) {
   var tone = Mapping[Number(e.keyCode)];
-  var key = document.getElementById(tone);
-  key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
-  // key.className = key.className.slice(0,key.className.length-1-7)
-  stopKey(tone);
+  if (Tones[tone]) {
+    stopKey(tone);
+  }
+};
+
+var setupKeyboardElement = function() {
+  keyboardElement = document.createElement("div");
+  keyboardElement.id = "keyboard";
+  keyboardStyleString = (
+    "display: inline-block;" +
+    "margin-top: 10px;" +
+    "overflow: hidden;" +
+    "position: relative;"
+  )
+  keyboardElement.style.cssText = keyboardStyleString;
+  document.getElementById("piano-widget").appendChild(keyboardElement);
+};
+
+var setupPianoWidgetElement = function() {
+  var pianoWidgetElement = document.getElementById("piano-widget");
+  pianoWidgetStyleString = (
+    "background-color: brown;" +
+    "width: " + pianoWidgetElement.getAttribute("width") + "px;" +
+    "height: " + pianoWidgetElement.getAttribute("height") + "px;" +
+    "text-align: center;" +
+    "position: relative;" +
+    "overflow: hidden;"
+  );
+  pianoWidgetElement.style.cssText = pianoWidgetStyleString;
+}
+
+var setupPowerButtonElement = function(widgetWidth, widgetHeight) {
+  var powerButtonElement = document.createElement("div");
+  powerButtonStyleString = (
+    "width: " + widgetWidth / 20 + "px;" +
+    "height: " + widgetHeight / 20 + "px;" +
+    "background: " + powerButtonColor() + ";" +
+    "position: absolute;" +
+    "bottom: " + widgetWidth / 40 + "px;" +
+    "right: " + widgetHeight / 40 + "px;" +
+    "box-shadow: 0px 0px 1px 1px;"
+  )
+  powerButtonElement.style.cssText = powerButtonStyleString;
+  powerButtonElement.id = "power-button";
+  document.getElementById("piano-widget").appendChild(powerButtonElement);
+
+  powerButtonElement.addEventListener(
+    'click',
+    flipPowerSwitch
+  );
+};
+
+var powerButtonColor = function() {
+  if (powerOn) {
+    return "green";
+  } else {
+    return "red";
+  }
+}
+
+var flipPowerSwitch = function() {
+  if (powerOn) {
+    turnPianoOff();
+  } else {
+    turnPianoOn();
+  }
+};
+
+var turnPianoOn = function() {
+  powerOn = true;
+  powerButtonElement = document.getElementById("power-button");
+  powerButtonElement.style.cssText += (
+    "background: green;"
+  )
+};
+
+var turnPianoOff = function() {
+  powerOn = false;
+  powerButtonElement = document.getElementById("power-button");
+  powerButtonElement.style.cssText += (
+    "background: red;"
+  )
 };
 
 
 var main = function() {
   var pianoWidgetElement = document.getElementById("piano-widget");
-  pianoWidgetElement.style.backgroundColor = "brown";
-  pianoWidgetElement.style.width = pianoWidgetElement.getAttribute("width")+"px";
-  pianoWidgetElement.style.height = pianoWidgetElement.getAttribute("height")+"px";
-  pianoWidgetElement.style.textAlign = "center";
-  keyboardElement = document.createElement("div");
-  keyboardElement.id = "keyboard";
-  keyboardElement.display = "inline-block";
-  pianoWidgetElement.appendChild(keyboardElement);
+
+  setupPianoWidgetElement();
+  setupKeyboardElement();
+
   var widgetWidth = pianoWidgetElement.getAttribute("width") || 600;
   var widgetHeight = pianoWidgetElement.getAttribute("height") || 300;
-  createKeys(widgetWidth/15, widgetHeight*13/15);
+
+  createKeys(widgetWidth, widgetHeight);
+  setupPowerButtonElement(widgetWidth, widgetHeight);
+
   document.addEventListener(
     'keydown',
     keyDownHandler
