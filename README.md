@@ -4,7 +4,7 @@ This is a synthesizer widget built with the HTML5 Web Audio API and Javascript. 
 (e.g. JQuery), to reduce the weight and dependencies. The widget is designed to be embedded
 into webpages with as little work as possible.
 
-<!-- ![Alt text](synth-widget.png?raw=true "Screenshot") -->
+![Alt text](synth-widget.png?raw=true "Screenshot")
 
 ## Features
  - **Waveform:** Click the waveform icons to change the timbre of the notes.
