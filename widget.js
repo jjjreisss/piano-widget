@@ -61,28 +61,30 @@ var Tones = {
 };
 
 var Mapping = {
-  16: "A#3",
-  20: "B3",
-  65: "C4",
-  87: "C#4",
-  83: "D4",
-  69: "D#4",
-  68: "E4",
-  70: "F4",
-  84: "F#4",
-  71: "G4",
-  89: "G#4",
-  72: "A4",
-  85: "A#4",
-  74: "B4",
-  75: "C5",
-  79: "C#5",
-  76: "D5",
-  80: "D#5",
-  186: "E5",
-  222: "F5",
-  221: "F#5",
-  13: "G5",
+  16: ["A#3"],
+  20: ["B3"],
+  65: ["C4"],
+  87: ["C#4"],
+  83: ["D4"],
+  69: ["D#4"],
+  68: ["E4"],
+  70: ["F4"],
+  84: ["F#4"],
+  71: ["G4"],
+  89: ["G#4"],
+  72: ["A4"],
+  85: ["A#4"],
+  74: ["B4"],
+  75: ["C5"],
+  79: ["C#5"],
+  76: ["D5"],
+  80: ["D#5"],
+  186: ["E5"],
+  222: ["F5"],
+  221: ["F#5"],
+  13: ["G5"],
+  90: ["C4", "E4", "G4"],
+  88: ["D4", "F#4", "A#4"]
 };
 
 // $(document).on('keyup', function(e) {
@@ -184,16 +186,28 @@ var stopKey = function(tone) {
 };
 
 keyDownHandler = function(e) {
-  var tone = Mapping[Number(e.keyCode)];
-  if (Tones[tone]) {
-    playKey(tone);
+  var tones = Mapping[Number(e.keyCode)];
+  if (tones) {
+      tones.forEach(
+          function(tone) {
+              if (Tones[tone]) {
+                playKey(tone);
+              }
+          }
+      )
   }
 };
 
-keyUpHandler = function(e, tone) {
-  var tone = Mapping[Number(e.keyCode)];
-  if (Tones[tone]) {
-    stopKey(tone);
+keyUpHandler = function(e, tones) {
+  var tones = Mapping[Number(e.keyCode)];
+  if (tones) {
+      tones.forEach(
+          function(tone) {
+              if (Tones[tone]) {
+                stopKey(tone);
+              }
+          }
+      )
   }
 };
 
