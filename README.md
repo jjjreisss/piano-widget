@@ -1,4 +1,4 @@
-# Drawing Widget
+# Synthesizer Widget
 
 This is a synthesizer widget built with the HTML5 Web Audio API and Javascript. No external libraries are used
 (e.g. JQuery), to reduce the weight and dependencies. The widget is designed to be embedded
