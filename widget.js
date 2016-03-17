@@ -1,5 +1,7 @@
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var noteStops = {};
+var playingNotes = {};
+var keysFired = {};
 var playing = false;
 var powerOn = true;
 var wave = "sine";
@@ -166,6 +168,7 @@ var createKeys = function(widgetWidth, widgetHeight) {
 };
 
 var playKey = function(tone) {
+  playingNotes[tone] = (playingNotes[tone] ? playingNotes[tone] + 1 : 1);
   if (!noteStops[tone] && powerOn) {
     var key = document.getElementById(tone);
     var freq = Tones[tone];
@@ -178,27 +181,32 @@ var playKey = function(tone) {
 
 var stopKey = function(tone) {
   var key = document.getElementById(tone);
-  key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
-  if (noteStops[tone]) {
+  playingNotes[tone] -= 1;
+  if (playingNotes[tone] === 0 && noteStops[tone]) {
+    key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
     noteStops[tone].stop();
     noteStops[tone] = null;
   }
 };
 
 keyDownHandler = function(e) {
-  var tones = Mapping[Number(e.keyCode)];
-  if (tones) {
-      tones.forEach(
-          function(tone) {
-              if (Tones[tone]) {
-                playKey(tone);
-              }
-          }
-      )
+  if (!keysFired[e.keyCode]) {
+    keysFired[e.keyCode] = true;
+    var tones = Mapping[Number(e.keyCode)];
+    if (tones) {
+        tones.forEach(
+            function(tone) {
+                if (Tones[tone]) {
+                  playKey(tone);
+                }
+            }
+        )
+    }
   }
 };
 
 keyUpHandler = function(e, tones) {
+  keysFired[e.keyCode] = false;
   var tones = Mapping[Number(e.keyCode)];
   if (tones) {
       tones.forEach(
