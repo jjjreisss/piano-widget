@@ -1,7 +1,7 @@
 var ctx = new (window.AudioContext || window.webkitAudioContext)();
 var noteStops = {};
-var playingNotes = {};
-var keysFired = {};
+var freeNotes = {};
+var chordNotes = {};
 var playing = false;
 var powerOn = true;
 var wave = "sine";
@@ -28,8 +28,12 @@ var Note = function (freq) {
 };
 
 Note.prototype = {
-  start: function () {
-    this.gainNode.gain.value = 0.3;
+  start: function (type) {
+    if (type === "free") {
+      this.gainNode.gain.value = 0.3;
+    } else if (type === "chord") {
+      this.gainNode.gain.value = 0.1;
+    }
   },
 
   stop: function () {
@@ -167,55 +171,82 @@ var createKeys = function(widgetWidth, widgetHeight) {
   )
 };
 
-var playKey = function(tone) {
-  playingNotes[tone] = (playingNotes[tone] ? playingNotes[tone] + 1 : 1);
-  if (!noteStops[tone] && powerOn) {
+var playFreeKey = function(tone) {
+  if (!freeNotes[tone] && powerOn) {
+    var key = document.getElementById(tone);
+    var freq = Tones[tone];
+    var note = new Note(freq);
+    note.start("free");
+    freeNotes[tone] = note;
+    key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
+  }
+};
+
+var stopFreeKey = function(tone) {
+  var key = document.getElementById(tone);
+  if (!chordNotes[tone]) {
+    key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
+  }
+  if (freeNotes[tone]) {
+    freeNotes[tone].stop();
+    freeNotes[tone] = null;
+  }
+};
+
+var playChordKey = function(tone) {
+  if (!chordNotes[tone] && powerOn) {
     var key = document.getElementById(tone);
     var freq = Tones[tone];
     var note = new Note(freq);
     key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
-    note.start();
-    noteStops[tone] = note;
+    note.start("chord");
+    chordNotes[tone] = note;
   }
 };
 
-var stopKey = function(tone) {
+var stopChordKey = function(tone) {
   var key = document.getElementById(tone);
-  playingNotes[tone] -= 1;
-  if (playingNotes[tone] === 0 && noteStops[tone]) {
+  if (!freeNotes[tone]) {
     key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
-    noteStops[tone].stop();
-    noteStops[tone] = null;
+  }
+  if (chordNotes[tone]) {
+    chordNotes[tone].stop();
+    chordNotes[tone] = null;
   }
 };
 
 keyDownHandler = function(e) {
-  if (!keysFired[e.keyCode]) {
-    keysFired[e.keyCode] = true;
-    var tones = Mapping[Number(e.keyCode)];
-    if (tones) {
-        tones.forEach(
-            function(tone) {
-                if (Tones[tone]) {
-                  playKey(tone);
-                }
-            }
-        )
+  var tones = Mapping[Number(e.keyCode)];
+  if (tones && tones.length === 1) {
+    if (Tones[tones[0]]) {
+      playFreeKey(tones[0]);
     }
+  }
+  else if (tones && tones.length > 1) {
+      tones.forEach(
+          function(tone) {
+              if (Tones[tone]) {
+                playChordKey(tone);
+              }
+          }
+      )
   }
 };
 
 keyUpHandler = function(e, tones) {
-  keysFired[e.keyCode] = false;
   var tones = Mapping[Number(e.keyCode)];
-  if (tones) {
-      tones.forEach(
-          function(tone) {
-              if (Tones[tone]) {
-                stopKey(tone);
-              }
-          }
-      )
+  if (tones && tones.length === 1) {
+      if (Tones[tones[0]]) {
+        stopFreeKey(tones[0]);
+      }
+  } else if (tones && tones.length > 1) {
+    tones.forEach(
+        function(tone) {
+            if (Tones[tone]) {
+              stopChordKey(tone);
+            }
+        }
+    )
   }
 };
 
