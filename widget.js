@@ -184,9 +184,9 @@ var playFreeKey = function(tone) {
 
 var stopFreeKey = function(tone) {
   var key = document.getElementById(tone);
-  if (!chordNotes[tone]) {
+  // if (!chordNotes[tone]) {
     key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
-  }
+  // }
   if (freeNotes[tone]) {
     freeNotes[tone].stop();
     freeNotes[tone] = null;
@@ -198,7 +198,7 @@ var playChordKey = function(tone) {
     var key = document.getElementById(tone);
     var freq = Tones[tone];
     var note = new Note(freq);
-    key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
+    // key.style.cssText += "box-shadow: -1px 2px 0px 2px;";
     note.start("chord");
     chordNotes[tone] = note;
   }
@@ -206,9 +206,9 @@ var playChordKey = function(tone) {
 
 var stopChordKey = function(tone) {
   var key = document.getElementById(tone);
-  if (!freeNotes[tone]) {
-    key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
-  }
+  // if (!freeNotes[tone]) {
+  //   key.style.cssText += "box-shadow: 0px 0px 0px 0px;";
+  // }
   if (chordNotes[tone]) {
     chordNotes[tone].stop();
     chordNotes[tone] = null;
