@@ -67,44 +67,69 @@ var Tones = {
 };
 
 var Mapping = {
-  16: ["A#3"],
-  20: ["B3"],
-  65: ["C4"],
-  87: ["C#4"],
-  83: ["D4"],
-  69: ["D#4"],
-  68: ["E4"],
-  70: ["F4"],
-  84: ["F#4"],
-  71: ["G4"],
-  89: ["G#4"],
-  72: ["A4"],
-  85: ["A#4"],
-  74: ["B4"],
-  75: ["C5"],
-  79: ["C#5"],
-  76: ["D5"],
-  80: ["D#5"],
-  186: ["E5"],
-  222: ["F5"],
-  221: ["F#5"],
-  13: ["G5"],
-  90: ["C4", "E4", "G4", "C5"],
-  88: ["C4", "F4", "A4", "C5"],
-  67: ["A#3", "D4", "F4", "A#4"],
-  86: ["A#3", "D#4", "G4", "A#4"],
-  66: ["C4", "D#4", "G#4", "C5"],
-  78: ["C#4", "F4", "G#4", "C#5"],
-  77: ["A#3", "C#4", "F#4", "A#4"]
+  192: ["A#3"],
+  9: ["B3"],
+  81: ["C4"],
+  50: ["C#4"],
+  87: ["D4"],
+  51: ["D#4"],
+  69: ["E4"],
+  82: ["F4"],
+  53: ["F#4"],
+  84: ["G4"],
+  54: ["G#4"],
+  89: ["A4"],
+  55: ["A#4"],
+  85: ["B4"],
+  73: ["C5"],
+  57: ["C#5"],
+  79: ["D5"],
+  48: ["D#5"],
+  80: ["E5"],
+  219: ["F5"],
+  187: ["F#5"],
+  221: ["G5"],
+  // major chords
+  // c-major
+  65: ["C4", "E4", "G4", "C5"],
+  // f-major
+  83: ["C4", "F4", "A4", "C5"],
+  // bflat-major
+  68: ["D4", "F4", "A#4", "D5"],
+  // eflat-major
+  70: ["A#3", "D#4", "G4", "A#4"],
+  // aflat-major
+  71: ["C4", "D#4", "G#4", "C5"],
+  // dflat-major
+  72: ["C#4", "F4", "G#4", "C#5"],
+  // gflat-major
+  74: ["A#3", "C#4", "F#4", "A#4"],
+  // b-major
+  75: ["B3", "D#4", "F#4", "B4"],
+  // e-major
+  76: ["B3", "E4", "G#4", "B4"],
+  // a-major
+  59: ["C#4", "E4", "A4", "C#5"],
+  // d-major
+  44: ["D4", "F#4", "A4", "D5"],
+  // minor chords
+  // c-minor
+  90: ["C4", "D#4", "G4", "C5"],
+  // f-minor
+  88: ["C4", "F4", "G#4", "C5"],
+  // bflat-minor
+  67: ["C#4", "F4", "A#4", "C#5"],
+  // eflat-minor
+  86: ["A#3", "D#4", "F#4", "A#4"],
+  // aflat-minor
+  66: ["B3", "D#4", "G#4", "B4"],
+  // dflat-minor
+  78: ["C#4", "E4", "G#4", "C#5"],
+  // gflat-minor
+  77: ["B3", "D#4", "F#4", "B4"],
+  // b-minor
+  188: ["B3", "D4", "F4", "B4"]
 };
-
-// $(document).on('keyup', function(e) {
-//   KeyActions.keyUnpressed(Mapping[e.keyCode]);
-// });
-//
-// $(document).on('keydown', function(e) {
-//   KeyActions.keyPressed(Mapping[e.keyCode]);
-// });
 
 var createKeys = function(widgetWidth, widgetHeight) {
   var toneStrings = Object.keys(Tones);
@@ -214,7 +239,10 @@ var stopChordKey = function(tone) {
   }
 };
 
-keyDownHandler = function(e) {
+var keyDownHandler = function(e) {
+  if (powerOn) {
+    e.preventDefault();
+  }
   var tones = Mapping[Number(e.keyCode)];
   if (tones && tones.length === 1) {
     if (Tones[tones[0]]) {
@@ -232,7 +260,7 @@ keyDownHandler = function(e) {
   }
 };
 
-keyUpHandler = function(e, tones) {
+var keyUpHandler = function(e, tones) {
   var tones = Mapping[Number(e.keyCode)];
   if (tones && tones.length === 1) {
       if (Tones[tones[0]]) {
@@ -360,6 +388,7 @@ var flipPowerSwitch = function() {
   if (powerOn) {
     turnSynthOff();
   } else {
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
     turnSynthOn();
   }
 };
