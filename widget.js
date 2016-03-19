@@ -4,6 +4,7 @@ var freeNotes = {};
 var chordNotes = {};
 var playing = false;
 var powerOn = true;
+var contextInterval = null;
 var wave = "sine";
 
 
@@ -388,12 +389,12 @@ var flipPowerSwitch = function() {
   if (powerOn) {
     turnSynthOff();
   } else {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
     turnSynthOn();
   }
 };
 
 var turnSynthOn = function() {
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
   powerOn = true;
   powerButtonElement = document.getElementById("power-button");
   powerButtonElement.style.cssText += (
@@ -403,6 +404,7 @@ var turnSynthOn = function() {
 };
 
 var turnSynthOff = function() {
+  ctx.close();
   powerOn = false;
   powerButtonElement = document.getElementById("power-button");
   powerButtonElement.style.cssText += (
