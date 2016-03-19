@@ -184,7 +184,7 @@ var createKeys = function(widgetWidth, widgetHeight) {
         'mouseleave',
         function() {
           if (playing) {
-            stopKey(tone);
+            stopFreeKey(tone);
           }
         }
       );
@@ -192,7 +192,7 @@ var createKeys = function(widgetWidth, widgetHeight) {
         'mouseenter',
         function() {
           if (playing) {
-            playKey(tone);
+            playFreeKey(tone);
           }
         }
       );
