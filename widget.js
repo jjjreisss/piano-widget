@@ -170,14 +170,14 @@ var createKeys = function(widgetWidth, widgetHeight) {
         'mousedown',
         function() {
           playing = true;
-          playKey(tone);
+          playFreeKey(tone);
         }
       );
       key.addEventListener(
         'mouseup',
         function() {
           playing = false;
-          stopKey(tone);
+          stopFreeKey(tone);
         }
       );
       key.addEventListener(
