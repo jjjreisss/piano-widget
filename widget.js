@@ -132,6 +132,33 @@ var Mapping = {
   188: ["B3", "D4", "F4", "B4"]
 };
 
+var Chords = {
+  0: "C",
+  1: "Cm",
+  2: "F",
+  3: "Fm",
+  4: "Bb",
+  5: "Bbm",
+  6: "Eb",
+  7: "Ebm",
+  8: "Ab",
+  9: "Abm",
+  10: "Db",
+  11: "Dbm",
+  12: "Gb",
+  13: "Gbm",
+  14: "B",
+  15: "Bb",
+  16: "E",
+  17: "Em",
+  18: "A",
+  19: "Am",
+  20: "D",
+  21: "Dm",
+  22: "G",
+  23: "Gm"
+}
+
 var createKeys = function(widgetWidth, widgetHeight) {
   var toneStrings = Object.keys(Tones);
   var key;
@@ -384,8 +411,8 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
   chordPanelElement.id = "chord-panel";
   document.getElementById("synth-widget").appendChild(chordPanelElement);
 
-  var buttonWidth = widgetWidth / 30;
-  var buttonHeight = widgetWidth / 30;
+  var buttonWidth = Math.min(widgetWidth, widgetHeight) / 30;
+  var buttonHeight = buttonWidth;
   var chordButtonElement
   var chordButtonStyleString = (
     "width: " + buttonWidth + "px;" +
@@ -394,15 +421,18 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "background: goldenrod;" +
     "display: inline-block;" +
     "margin: " + buttonWidth / 4 + "px;" +
-    "box-shadow: 1px 1px 0px 0px;"
+    "box-shadow: 1px 1px 0px 0px;" +
+    "font-size: " + buttonWidth / 2 + "px;" +
+    "line-height: " + buttonWidth + "px;"
   )
 
-  for (i = 0; i < 20; i++) {
+  for (i = 0; i < 24; i++) {
     chordButtonElement = document.createElement("div");
     chordButtonElement.style.cssText = chordButtonStyleString;
     chordButtonElement.className = "chord-button";
-    chordButtonElement.id = "chord-button-" + i;
-    document.getElementById("chord-panel").appendChild(chordButtonElement)
+    chordButtonElement.id = "chord-button-" + Chords[i];
+    chordButtonElement.innerHTML = Chords[i];
+    document.getElementById("chord-panel").appendChild(chordButtonElement);
   }
 
 
