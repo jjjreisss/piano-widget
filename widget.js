@@ -377,16 +377,33 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "width: " + widgetWidth / 10 + "px;" +
     "height: " + widgetHeight * 13 / 15 + "px;" +
     "top: " + widgetHeight / 30 + "px;"+
-    "left: " + widgetWidth / 80 + "px;" + 
-    "text-align: center;" +
-    "background: green"
+    "left: " + widgetWidth / 80 + "px;" +
+    "text-align: center;"
   );
   chordPanelElement.style.cssText = chordPanelStyleString;
   chordPanelElement.id = "chord-panel";
   document.getElementById("synth-widget").appendChild(chordPanelElement);
 
-  var width = widgetWidth / 100;
-  var height = widgetHeight / 100;
+  var buttonWidth = widgetWidth / 30;
+  var buttonHeight = widgetWidth / 30;
+  var chordButtonElement
+  var chordButtonStyleString = (
+    "width: " + buttonWidth + "px;" +
+    "height: " + buttonHeight + "px;" +
+    "border-radius: " + buttonWidth / 2 + "px;" +
+    "background: goldenrod;" +
+    "display: inline-block;" +
+    "margin: " + buttonWidth / 4 + "px;" +
+    "box-shadow: 1px 1px 0px 0px;"
+  )
+
+  for (i = 0; i < 20; i++) {
+    chordButtonElement = document.createElement("div");
+    chordButtonElement.style.cssText = chordButtonStyleString;
+    chordButtonElement.className = "chord-button";
+    chordButtonElement.id = "chord-button-" + i;
+    document.getElementById("chord-panel").appendChild(chordButtonElement)
+  }
 
 
 }
