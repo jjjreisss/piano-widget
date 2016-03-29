@@ -370,6 +370,27 @@ var setupWave = function(width, height, styleString, picString, type) {
   document.getElementById("button-panel").appendChild(waveElement)
 };
 
+var setupChordButtons = function(widgetWidth, widgetHeight) {
+  var chordPanelElement = document.createElement("div");
+  var chordPanelStyleString = (
+    "position: absolute;" +
+    "width: " + widgetWidth / 10 + "px;" +
+    "height: " + widgetHeight * 13 / 15 + "px;" +
+    "top: " + widgetHeight / 30 + "px;"+
+    "left: " + widgetWidth / 80 + "px;" + 
+    "text-align: center;" +
+    "background: green"
+  );
+  chordPanelElement.style.cssText = chordPanelStyleString;
+  chordPanelElement.id = "chord-panel";
+  document.getElementById("synth-widget").appendChild(chordPanelElement);
+
+  var width = widgetWidth / 100;
+  var height = widgetHeight / 100;
+
+
+}
+
 var changeWave = function(type) {
   if (powerOn) {
     document.getElementById(wave).style.outline = "0px";
@@ -417,17 +438,16 @@ var turnSynthOff = function() {
 
 var main = function() {
   var synthWidgetElement = document.getElementById("synth-widget");
-
-  setupSynthWidgetElement();
-
   var widgetWidth = synthWidgetElement.getAttribute("width") || 600;
   var widgetHeight = synthWidgetElement.getAttribute("height") || 300;
 
+  setupSynthWidgetElement();
   setupKeyboardElement(widgetWidth, widgetHeight);
   createKeys(widgetWidth, widgetHeight);
   setupPowerButtonElement(widgetWidth, widgetHeight);
-
   setupWaveButtons(widgetWidth, widgetHeight);
+  setupChordButtons(widgetWidth, widgetHeight);
+
   turnSynthOn();
 
   document.addEventListener(
