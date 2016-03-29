@@ -135,7 +135,7 @@ var Mapping = {
 var createKeys = function(widgetWidth, widgetHeight) {
   var toneStrings = Object.keys(Tones);
   var key;
-  var width = widgetWidth / 15;
+  var width = widgetWidth / 16;
   var height = widgetHeight * 13 / 15;
 
   toneStrings.forEach(
@@ -284,6 +284,7 @@ var setupKeyboardElement = function(widgetWidth, widgetHeight) {
   keyboardStyleString = (
     "display: inline-block;" +
     "margin-top: " +  widgetHeight / 30 + "px;" +
+    "margin-left: " + widgetWidth / 10 + "px;" +
     "overflow: hidden;" +
     "position: relative;"
   )
@@ -330,7 +331,7 @@ var setupWaveButtons = function(widgetWidth, widgetHeight) {
   var buttonPanelStyleString = (
     "position: absolute;" +
     "height: " + widgetHeight / 15 + "px;" +
-    "left: "+  widgetWidth / 80 + "px;" +
+    "left: "+  widgetWidth / 10 + "px;" +
     "bottom: " + widgetHeight / 100 + "px;" +
     "text-align: center;"
   );
@@ -388,7 +389,7 @@ var powerButtonColor = function() {
 var flipPowerSwitch = function() {
   if (powerOn) {
     turnSynthOff();
-  } else {
+  } else {ssssssaaaaaaaaa
     turnSynthOn();
   }
 };
