@@ -67,7 +67,29 @@ var Tones = {
   "G5":	1567.98
 };
 
-var Mapping = {
+var keycodeToChordName = {
+  65: "C",
+  83: "F",
+  68: "Bb",
+  70: "Eb",
+  71: "Ab",
+  72: "Db",
+  74: "Gb",
+  75: "B",
+  76: "E",
+  59: "A",
+  44: "D",
+  90: "Cm",
+  88: "Fm",
+  67: "Bbm",
+  86: "Ebm",
+  66: "Abm",
+  78: "Dbm",
+  77: "Gbm",
+  188: "Bm",
+}
+
+var keycodeToNotes = {
   192: ["A#3"],
   9: ["B3"],
   81: ["C4"],
@@ -127,7 +149,7 @@ var Mapping = {
   // dflat-minor
   78: ["C#4", "E4", "G#4", "C#5"],
   // gflat-minor
-  77: ["B3", "D#4", "F#4", "B4"],
+  77: ["C#4", "F#4", "A4", "C#5"],
   // b-minor
   188: ["B3", "D4", "F4", "B4"]
 };
@@ -267,17 +289,33 @@ var stopChordKey = function(tone) {
   }
 };
 
+var pushChordButton = function(chord) {
+  var chordElement = document.getElementById("chord-button-" + chord);
+  chordElement.style.boxShadow = "0px 0px 0px 0px";
+  chordElement.style.left = "1px";
+  chordElement.style.top = "1px";
+};
+
+var unpushChordButton = function(chord) {
+  var chordElement = document.getElementById("chord-button-" + chord);
+  chordElement.style.boxShadow = "1px 1px 0px 1px";
+  chordElement.style.left = "0px";
+  chordElement.style.top = "0px";
+};
+
 var keyDownHandler = function(e) {
   if (powerOn) {
     e.preventDefault();
   }
-  var tones = Mapping[Number(e.keyCode)];
+  var tones = keycodeToNotes[Number(e.keyCode)];
   if (tones && tones.length === 1) {
     if (Tones[tones[0]]) {
       playFreeKey(tones[0]);
     }
   }
   else if (tones && tones.length > 1) {
+    var chordName = keycodeToChordName[e.keyCode];
+    pushChordButton(chordName);
       tones.forEach(
           function(tone) {
               if (Tones[tone]) {
@@ -289,12 +327,14 @@ var keyDownHandler = function(e) {
 };
 
 var keyUpHandler = function(e, tones) {
-  var tones = Mapping[Number(e.keyCode)];
+  var tones = keycodeToNotes[Number(e.keyCode)];
   if (tones && tones.length === 1) {
       if (Tones[tones[0]]) {
         stopFreeKey(tones[0]);
       }
   } else if (tones && tones.length > 1) {
+    var chordName = keycodeToChordName[e.keyCode];
+    unpushChordButton(chordName);
     tones.forEach(
         function(tone) {
             if (Tones[tone]) {
@@ -411,8 +451,8 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
   chordPanelElement.id = "chord-panel";
   document.getElementById("synth-widget").appendChild(chordPanelElement);
 
-  var buttonWidth = Math.min(widgetWidth, widgetHeight) / 30;
-  var buttonHeight = buttonWidth;
+  var buttonWidth = widgetWidth / 30;
+  var buttonHeight = widgetWidth / 30;
   var chordButtonElement
   var chordButtonStyleString = (
     "width: " + buttonWidth + "px;" +
@@ -421,9 +461,10 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "background: goldenrod;" +
     "display: inline-block;" +
     "margin: " + buttonWidth / 4 + "px;" +
-    "box-shadow: 1px 1px 0px 0px;" +
+    "box-shadow: 1px 1px 0px 1px;" +
     "font-size: " + buttonWidth / 2 + "px;" +
-    "line-height: " + buttonWidth + "px;"
+    "line-height: " + buttonWidth + "px;" +
+    "position: relative;"
   )
 
   for (i = 0; i < 24; i++) {
