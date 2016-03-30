@@ -451,8 +451,8 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
   chordPanelElement.id = "chord-panel";
   document.getElementById("synth-widget").appendChild(chordPanelElement);
 
-  var buttonWidth = widgetWidth / 30;
-  var buttonHeight = widgetWidth / 30;
+  var buttonWidth = Math.min(widgetWidth / 30, widgetHeight / 15);
+  var buttonHeight = buttonWidth;
   var chordButtonElement
   var chordButtonStyleString = (
     "width: " + buttonWidth + "px;" +
