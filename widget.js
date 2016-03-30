@@ -461,6 +461,7 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "background: goldenrod;" +
     "display: inline-block;" +
     "margin: " + buttonWidth / 4 + "px;" +
+    "margin-bottom: 0px;" +
     "box-shadow: 1px 1px 0px 1px;" +
     "font-size: " + buttonWidth / 2 + "px;" +
     "line-height: " + buttonWidth + "px;" +
