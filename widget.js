@@ -443,7 +443,7 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "position: absolute;" +
     "width: " + widgetWidth / 10 + "px;" +
     "height: " + widgetHeight * 13 / 15 + "px;" +
-    "top: " + widgetHeight / 30 + "px;"+
+    "top: " + widgetHeight / 60 + "px;"+
     "left: " + widgetWidth / 80 + "px;" +
     "text-align: center;"
   );
@@ -451,7 +451,7 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
   chordPanelElement.id = "chord-panel";
   document.getElementById("synth-widget").appendChild(chordPanelElement);
 
-  var buttonWidth = Math.min(widgetWidth / 30, widgetHeight / 15);
+  var buttonWidth = Math.min(widgetWidth / 30, widgetHeight / 20);
   var buttonHeight = buttonWidth;
   var chordButtonElement
   var chordButtonStyleString = (
