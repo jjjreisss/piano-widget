@@ -444,7 +444,7 @@ var setupChordButtons = function(widgetWidth, widgetHeight) {
     "width: " + widgetWidth / 10 + "px;" +
     "height: " + widgetHeight * 13 / 15 + "px;" +
     "top: " + widgetHeight / 60 + "px;"+
-    "left: " + widgetWidth / 80 + "px;" +
+    "left: " + widgetWidth / 160 + "px;" +
     "text-align: center;"
   );
   chordPanelElement.style.cssText = chordPanelStyleString;
